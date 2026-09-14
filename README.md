@@ -1,10 +1,12 @@
 # xin-binlang-admin
 
-新槟榔兑奖系统的总部运营管理后台，集中管理活动、奖池、门店、销售和兑奖订单。
+倌榔兑奖系统的总部运营管理后台，集中管理活动、奖池、门店、销售和兑奖订单。
 
 ## 项目简介
 
 后台按账号角色展示业务入口，覆盖经营总览、活动配置、品牌素材、奖池、奖品库存、兑换码批次生成与导出、门店与店员账号、销售账号、兑奖订单、用户风控、审计日志和消息队列。
+
+奖品支持实物、加价换购和现金红包：换购商品分别设置整袋价值和到店补款金额；现金奖励提供独立领取记录页，显示待确认、转账中、已到账或需要人工核对等状态。金额和概率由运营配置，业务约束及商户准备见 [后端奖励说明](https://github.com/jiangyi3265/xin-binlang-backend/blob/main/docs/guanlang-rewards.md)。
 
 生产访问地址：[https://xbinglangsht.oksja.cn](https://xbinglangsht.oksja.cn)。发布入口统一位于 [xin-binlang-backend Actions](https://github.com/jiangyi3265/xin-binlang-backend/actions/workflows/deploy-split.yml)。
 
@@ -72,7 +74,7 @@ docs/
 .github/workflows/     静态检查 CI
 ```
 
-其中业务图片也由后端提供给用户端。当前基础品牌与示例素材继承已有实现，后续通过活动设置或代码按新甲方资料替换。
+其中业务图片也由后端提供给用户端。当前品牌为倌榔，主题采用深蓝、冷蓝与金色，已加入 30 元棕金装、50 元深蓝装及配套植物纹样。素材来源见 [倌榔素材说明](docs/guanlang-assets.md)。现有数据库的活动设置需要由管理员显式更新，代码默认值不会覆盖线上设置。
 
 ## 简历描述示例
 
