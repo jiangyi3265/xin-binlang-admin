@@ -6,6 +6,8 @@
 
 后台按账号角色展示业务入口，覆盖经营总览、活动配置、品牌素材、奖池、奖品库存、兑换码批次生成与导出、门店与店员账号、销售账号、兑奖订单、用户风控、审计日志和消息队列。
 
+生产访问地址：[https://xbinglangsht.oksja.cn](https://xbinglangsht.oksja.cn)。发布入口统一位于 [xin-binlang-backend Actions](https://github.com/jiangyi3265/xin-binlang-backend/actions/workflows/deploy-split.yml)。
+
 超级管理员、运营人员、只读审计和销售使用不同权限。销售仅查看及维护本人门店；最终权限和数据范围由后端校验。页面通过同源 `/api` 访问 xin-binlang-backend，并管理 xin-binlang-app 展示的活动内容。
 
 ## 技术栈
