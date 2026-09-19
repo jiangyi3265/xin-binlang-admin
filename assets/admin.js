@@ -195,7 +195,7 @@ async function settingsPage(main){
     </div></section>
     <section class="settings-section"><div class="settings-section-head"><div><span>02</span><h3>小程序图片</h3></div><p>直接上传即可，不需要填写图片地址。统一支持 PNG、JPG、WebP，单张不超过 5MB。</p></div><div class="form-grid">
       ${imageUploadField({label:'首页背景图',name:'homeBg',value:item.homeBg,title:'首页品牌背景',description:'建议 1500 × 1000，至少 750 × 500，横版 3:2；左上区域保持简洁，避免文字被遮挡。',required:true,preview:'landscape'})}
-      ${imageUploadField({label:'兑奖页海报图',name:'poster',value:item.poster,title:'兑奖页顶部海报与入场视觉',description:'建议 1500 × 900，至少 750 × 450，横版；主要内容放在中间安全区域。',required:true,preview:'landscape'})}
+      ${imageUploadField({label:'活动海报图（选填）',name:'poster',value:item.poster,title:'活动公告备用海报',description:'建议 1500 × 900 横版。可留空；30 元和 50 元的包装与背景在奖池管理中分别设置。',preview:'landscape'})}
       ${imageUploadField({label:'产品主图',name:'productImg',value:item.productImg,title:'中奖页产品展示图',description:'建议 1200 × 1200 正方形，产品完整、背景干净；中奖弹窗也会使用奖品自身图片。',required:true})}
       ${imageUploadField({label:'规则页背景图',name:'ruleBg',value:item.ruleBg,title:'活动规则页品牌背景',description:'建议 1500 × 840，至少 750 × 420，横版；中央和左侧保留文字安全区。',required:true,preview:'landscape'})}
     </div></section>
@@ -218,10 +218,12 @@ async function settingsPage(main){
   const button=q('[type=submit]',form)
   bindImageUploaders(form,busy=>{imageUploading=busy;button.disabled=busy})
   form.addEventListener('submit',async event=>{event.preventDefault();if(imageUploading)return;button.disabled=true;try{
-    const values=Object.fromEntries(new FormData(form));for(const name of ['homeBg','poster','productImg','ruleBg'])if(!values[name])throw new Error('四项小程序图片都需要保留一张有效图片');values.active=q('[name=active]',form).checked;values.dailyLimit=Number(values.dailyLimit);values.prizeValidDays=Number(values.prizeValidDays)
+    const values=Object.fromEntries(new FormData(form));for(const name of ['homeBg','productImg','ruleBg'])if(!values[name])throw new Error('首页背景、产品主图和规则页背景需要保留有效图片');values.active=q('[name=active]',form).checked;values.dailyLimit=Number(values.dailyLimit);values.prizeValidDays=Number(values.prizeValidDays)
     values.notice={enabled:q('[name=noticeEnabled]',form).checked,badge:values.noticeBadge||'公告',buttonText:values.noticeButtonText||'我知道了',image:values.noticeImage||'',title:values.noticeTitle||'',date:values.noticeDate||'',lines:String(values.noticeLines||'').split(/\r?\n/).map(line=>line.trim()).filter(Boolean)}
     values.flow=flow.map((step,index)=>({no:String(index+1).padStart(2,'0'),icon:step.icon||'',title:values[`flowTitle${index}`],description:values[`flowDesc${index}`]}))
     values.service={phone:String(values.servicePhone||'').trim(),wechat:String(values.serviceWechat||'').trim(),time:String(values.serviceTime||'').trim(),note:String(values.serviceNote||'').trim()}
+    const previousService={phone:service.phone||'',wechat:service.wechat||'',time:service.time||service.hours||'',note:service.note||''}
+    if(Object.keys(previousService).every(key=>values.service[key]===String(previousService[key]).trim()))delete values.service
     for(const key of ['noticeBadge','noticeButtonText','noticeImage','noticeTitle','noticeDate','noticeLines','servicePhone','serviceWechat','serviceTime','serviceNote',...flow.flatMap((_,index)=>[`flowTitle${index}`,`flowDesc${index}`])])delete values[key]
     const saved=await api('/admin/settings',{method:'PUT',body:values});setBranding(saved);applyBranding();toast('设置已保存','品牌信息会同步到后台和小程序，小程序需重新进入或刷新');loadPage()
   }catch(error){toast('保存失败',error.message,'error');button.disabled=false}})
